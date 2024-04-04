@@ -16,7 +16,12 @@ var TestCases = []struct {
 	{
 		"Base Test Case",
 		"base_test.txt",
-		1,
+		0,
+	},
+	{
+		"Real Test Case",
+		"real_test.txt",
+		20938290,
 	},
 }
 
