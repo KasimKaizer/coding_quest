@@ -12,6 +12,8 @@ import (
 var TestCases = []struct {
 	Description string
 	InputFile   string
+	GridHeight  int
+	GridWidth   int
 	Expected    string
 	// TODO: find a way to test
 	// maybe we can keep the solution in a .txt file, read it into a bytes buffer and
@@ -20,8 +22,9 @@ var TestCases = []struct {
 	{
 		"Base Test Case",
 		"base_test.txt",
-		` 
-........
+		8,
+		8,
+		`........
 .######.
 .#......
 .#......
@@ -29,8 +32,24 @@ var TestCases = []struct {
 .#......
 .#......
 .######.
-`, // remember to ignore the first char in the string, when creating the tests,
-		// as first char is \n which was added for better illustration of the test
+`,
+	},
+	{
+		"Real Test Case",
+		"real_test.txt",
+		10,
+		50,
+		`..................................................
+..................##..####..####...##.............
+.................#.#.....#..#..#..#.#.............
+.####..####.####...#.....#..#..#....#.............
+.#..##.#....#......#....#...#..#....#.............
+.#..##.#....#......#....#...#..#....#.............
+.#..##.#....#......#...#....#..#....#.............
+.#..##.####.####...#...#....####....#.............
+..................................................
+..................................................
+`,
 	},
 }
 
@@ -68,7 +87,7 @@ func TestDecode(t *testing.T) {
 				t.Error(err)
 			}
 			buf := new(bytes.Buffer)
-			Decode(data, buf)
+			Decode(data, tt.GridHeight, tt.GridWidth, buf)
 			got := buf.String()
 			if tt.Expected != got {
 				t.Fatalf("expected: %s, got: %s", tt.Expected, got)
