@@ -11,12 +11,23 @@ import (
 var TestCases = []struct {
 	Description string
 	InputFile   string
+	GridWidth   int
+	GridHeight  int
 	Expected    string
 }{
 	{
 		"Base Test Cases",
 		"base_test.txt",
+		8,
+		8,
 		"5:4",
+	},
+	{
+		"Real Test Cases",
+		"real_test.txt",
+		100,
+		100,
+		"5:8",
 	},
 }
 
@@ -59,7 +70,7 @@ func TestFindSafePath(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			got := FindSafePath(data)
+			got := FindSafePath(data, tt.GridWidth, tt.GridHeight)
 			if tt.Expected != got {
 				t.Fatalf("expected: %s,got: %s", tt.Expected, got)
 			}
