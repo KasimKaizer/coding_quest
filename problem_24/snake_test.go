@@ -12,24 +12,36 @@ var TestCases = []struct {
 	Description string
 	FruitFile   string
 	Moves       string
+	BoardWidth  int
+	BoardHeight int
 	Expected    int
 }{
 	{
 		"Base case Test",
 		"base_test.txt",
 		"DDDRRRDDLLLDRRRRRRRDD",
+		8,
+		8,
 		320,
+	},
+	{
+		"Real case Test",
+		"real_test.txt",
+		"RRRRRRRRRRDDDDDDDDDDUUUUULLLLLLDDDDDDDDDDDDRRRRRRUUUUUUUUUUULLLLLLUUUURRDDRDRDDRDRDRDRDDDDRRRRRRUULLLLLLDLDLDLUUUUUUUULLLLLLLLUUURRRRDDDRRRRRRRRRRRRUUULLDDDRRDDDDDDDDDDLLLLLLLLLLLUUUUUUUUUUUUUUUULLLLLDDDRURRDDDDDDLLDRRRRRRUUUUUUURURRRRRRDDDDDDDDDDDDDLLLLLDRRRRRRRRUUUUUULLLLLLLUUUUUUUUURRRDDDDDDLLLDDRRRRUUUUURRDDDDDDLLLLLLLLLLLLLLLDDDDRRRRUUURUUUUUUUUURRRRRDDDDRRRRRDDDDDDLLLLLLDLLLLLUUUUUUUUURRDDDDDDDDDDDDDLLLLUUUUURRRUUURRDDDDLLDRRRRRRRRRRUUUUUUULLLDDDRDDDLLLDDRRRRRRUUUUUUUUUUUUULLLLDDDDDDDDDDDDDDLLLLUUUUUUUUUUURRRRRRRDDDDDDDLLLLLLDDDDDLDLLLUUUUUULLLLLLLUUUUUUUUURRRRRRRRRDDDDDDDDDDRRRRRRRRUULLLLLLUUUUURRRUUUUULLLLDDLDLLLLLDDDDRRRRRRRRRRRRRUUUUUUUULLLLLLLLLLLDDDDLLLDDDDDDDDDDRRRRRRRRRRRRRRRUUUUUUUUUULLLLLLLLLULLLLLLLUURRRRRRRRRRRRRRRRRDDDDDDDDDDDLLLLLLLLLDDDDLLLLLLLLDRRRRRRRRRUUURRRRRRRRDDDDLLLLLLLLLLLLLLLLLLUUUURRRRRRRULLLLLLLUUUUUUUUUUUURRRRRRRRDDDDDRDDDDDDDDDDDRRRRRDRRRRUULLLLLLLURRRRRRRULLLLLLLURRRRRRRULLLLLLLURRRRRRRULLLLLLLURRRRRRRULLLLLLLURRRRRRRULLLLLLLURRRRRRRULLLLLLLURRRRRRRUULLLLLLLLLLLLLLLLDDDDDDDD",
+		20,
+		20,
+		4240,
 	},
 }
 
-func parseFruits(inputFile string) ([]Position, error) {
+func parseFruits(inputFile string) (*Queue, error) {
 	f, err := os.Open(inputFile)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
 	scanner := bufio.NewScanner(f)
-	out := make([]Position, 0)
+	out := new(Queue)
 	for scanner.Scan() {
 		splitText := strings.Fields(scanner.Text())
 		for _, text := range splitText {
@@ -42,11 +54,7 @@ func parseFruits(inputFile string) ([]Position, error) {
 			if err != nil {
 				return nil, err
 			}
-			fruit := Position{
-				X: x,
-				Y: y,
-			}
-			out = append(out, fruit)
+			out.Enqueue(x, y)
 		}
 	}
 	if err := scanner.Err(); err != nil {
@@ -62,7 +70,7 @@ func TestCalculateScore(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			got := CalculateScore(fruits, tt.Moves)
+			got := CalculateScore(fruits, tt.Moves, tt.BoardWidth, tt.BoardHeight)
 			if tt.Expected != got {
 				t.Fatalf("expected: %d, got: %d", tt.Expected, got)
 			}
