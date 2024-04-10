@@ -18,6 +18,11 @@ var TestCases = []struct {
 		"base_test.txt",
 		43,
 	},
+	{
+		"Real Case Test",
+		"real_test.txt",
+		7524,
+	},
 }
 
 func generateGraph(inputFile string) ([][]int, error) {
