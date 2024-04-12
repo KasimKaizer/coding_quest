@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// also utilize dijkstra algorithm for this question
+// utilize dijkstra algorithm for this question
 // convert the data in the input file into a hash map, this would allow us to easily process it
 
 // various functions required for heap data structure for dijkstra's algorithm
